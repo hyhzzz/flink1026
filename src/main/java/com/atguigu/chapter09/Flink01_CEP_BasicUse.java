@@ -24,7 +24,6 @@ public class Flink01_CEP_BasicUse {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);
 
-
         SingleOutputStreamOperator<WaterSensor> waterSensorStream = env
                 .readTextFile("input/sensor.txt")
                 .map(new MapFunction<String, WaterSensor>() {
@@ -41,21 +40,22 @@ public class Flink01_CEP_BasicUse {
                         .withTimestampAssigner((element, recordTimestamp) -> element.getTs()));
 
         //定义模式
-        //<WaterSensor>：表示你把什么数据输入到这个模式中 "start":模式的名字
+        //<WaterSensor>：表示你把什么数据输入到这个模式中 "start":模式的名字  begin:开始模式  给模式起名字
         Pattern<WaterSensor, WaterSensor> pattern = Pattern.<WaterSensor>begin("start")
+                //where条件：SimpleCondition简单条件
                 .where(new SimpleCondition<WaterSensor>() {
                     @Override
                     public boolean filter(WaterSensor value) throws Exception {
+                        //true暴露 false 丢弃
                         return "sensor_1".equalsIgnoreCase(value.getId());
                     }
                 });
 
-
         //把模式运用在流上
-        PatternStream<WaterSensor> waterSensorPatternStream = CEP.pattern(waterSensorStream, pattern);
+        PatternStream<WaterSensor> ps = CEP.pattern(waterSensorStream, pattern);
 
         //获取匹配到的结果
-        waterSensorPatternStream.select(new PatternSelectFunction<WaterSensor, String>() {
+        ps.select(new PatternSelectFunction<WaterSensor, String>() {
                     @Override
                     public String select(Map<String, List<WaterSensor>> pattern) throws Exception {
                         return pattern.toString();

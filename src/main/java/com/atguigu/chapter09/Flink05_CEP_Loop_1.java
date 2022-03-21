@@ -25,7 +25,6 @@ public class Flink05_CEP_Loop_1 {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);
 
-
         SingleOutputStreamOperator<WaterSensor> waterSensorStream = env
                 .readTextFile("input/sensor.txt")
                 .map(new MapFunction<String, WaterSensor>() {

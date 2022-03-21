@@ -20,7 +20,6 @@ import java.time.Duration;
  */
 public class Flink09_Watermark_SideOutput_1 {
     public static void main(String[] args) throws Exception {
-
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
@@ -44,7 +43,7 @@ public class Flink09_Watermark_SideOutput_1 {
                 .window(TumblingEventTimeWindows.of(Time.seconds(5)))
                 //允许迟到时间
                 .allowedLateness(Time.seconds(2))
-                //侧输出流
+                //把真正迟到的数据放到侧输出流
                 .sideOutputLateData(new OutputTag<WaterSensor>("side_1") {
                 })
                 .process(new ProcessWindowFunction<WaterSensor, String, String, TimeWindow>() {

@@ -16,7 +16,6 @@ import org.apache.flink.util.Collector;
  */
 public class Flink06_Watermark_InOrder {
     public static void main(String[] args) throws Exception {
-
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
@@ -27,6 +26,7 @@ public class Flink06_Watermark_InOrder {
                     return new WaterSensor(data[0], Long.parseLong(data[1]) * 1000, Integer.valueOf(data[2]));
                 })
                 //分配水印
+                //forMonotonousTimestamps：有序
                 .assignTimestampsAndWatermarks(WatermarkStrategy.<WaterSensor>forMonotonousTimestamps()
                         .withTimestampAssigner(new SerializableTimestampAssigner<WaterSensor>() {
                             //返回这套数据的事件时间，必须是毫秒
@@ -38,6 +38,7 @@ public class Flink06_Watermark_InOrder {
 
                 .keyBy(WaterSensor::getId)
                 .window(TumblingEventTimeWindows.of(Time.seconds(5)))
+                //<WaterSensor, String, String, TimeWindow> 第一个输出 第二个输入 第三个key的类型  第四个窗口类型
                 .process(new ProcessWindowFunction<WaterSensor, String, String, TimeWindow>() {
                     @Override
                     public void process(String key,

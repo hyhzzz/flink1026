@@ -12,7 +12,6 @@ import org.apache.flink.util.Collector;
  */
 public class Flink11_Time_ProcessTime {
     public static void main(String[] args) throws Exception {
-
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
@@ -30,6 +29,7 @@ public class Flink11_Time_ProcessTime {
                     @Override
                     public void processElement(WaterSensor value, Context ctx, Collector<String> out) throws Exception {
                         // 处理时间过后5s后触发定时器
+                        //注册定时器
                         ctx.timerService().registerProcessingTimeTimer(ctx.timerService().currentProcessingTime() + 5000);
                         out.collect(value.toString());
                     }
@@ -39,6 +39,7 @@ public class Flink11_Time_ProcessTime {
                     @Override
                     public void onTimer(long timestamp, OnTimerContext ctx, Collector<String> out) throws Exception {
                         System.out.println(timestamp);
+                        //当定时器触发的时候，自动回调这个方法
                         out.collect("我被触发了...."+timestamp);
                     }
                 })

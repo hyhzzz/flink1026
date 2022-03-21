@@ -17,10 +17,10 @@ import static org.apache.flink.table.api.Expressions.lit;
  * @author CoderHyh
  * @create 2022-03-20 19:37
  */
-public class Flink13_TableApi_Window_1 {
+public class Flink14_TableApi_Window_1 {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        env.setParallelism(2);
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
 
         SingleOutputStreamOperator<WaterSensor> waterSensorStream = env
@@ -35,12 +35,13 @@ public class Flink13_TableApi_Window_1 {
                                 .<WaterSensor>forBoundedOutOfOrderness(Duration.ofSeconds(5))
                                 .withTimestampAssigner((element, recordTimestamp) -> element.getTs())
                 );
+
         Table table = tableEnv.fromDataStream(waterSensorStream, $("id"), $("ts").rowtime(), $("vc"));
+
         table.window(Tumble.over(lit(10).second()).on($("ts")).as("w"))
                 .groupBy($("id"), $("w"))
                 .select($("id"), $("w").start(), $("w").end(), $("vc").sum())
                 .execute().print();
 
-        env.execute();
     }
 }

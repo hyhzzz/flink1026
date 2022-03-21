@@ -19,8 +19,7 @@ public class Flink02_Table_Agg {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        env.setParallelism(1);
-
+        env.setParallelism(2);
 
         DataStreamSource<WaterSensor> waterSensorStream =
                 env.fromElements(
@@ -38,14 +37,14 @@ public class Flink02_Table_Agg {
         //把流转成动态表
         Table table = tableEnv.fromDataStream(waterSensorStream);
 
-
         Table t1 = table.where($("vc").isGreaterOrEqual(20))
                 .groupBy($("id"))
                 .aggregate($("vc").sum().as("vc_sum"))
                 .select($("id"), $("vc_sum"));
 
         DataStream<Tuple2<Boolean, Row>> resultStream = tableEnv.toRetractStream(t1, Row.class);
-        resultStream.print();
+        //resultStream.print();
+        resultStream.filter(r->r.f0).print();
 
         env.execute();
 

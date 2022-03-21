@@ -15,7 +15,6 @@ import java.time.Duration;
  */
 public class Flink12_Time_EventTime {
     public static void main(String[] args) throws Exception {
-
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);

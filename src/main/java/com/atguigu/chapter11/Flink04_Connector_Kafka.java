@@ -19,10 +19,8 @@ import static org.apache.flink.table.api.Expressions.$;
  */
 public class Flink04_Connector_Kafka {
     public static void main(String[] args) throws Exception {
-
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
-
         env.setParallelism(2);
 
         Schema schema = new Schema();
@@ -30,7 +28,6 @@ public class Flink04_Connector_Kafka {
                 .field("id", DataTypes.STRING())
                 .field("ts", DataTypes.BIGINT())
                 .field("vc", DataTypes.INT());
-
 
         tableEnv.connect(new Kafka()
                 .version("universal")
@@ -40,9 +37,11 @@ public class Flink04_Connector_Kafka {
                 .property("bootstrap.servers", "hadoop102:9092,hadoop103:9092,hadoop104:9092"))
                 .withFormat(new Json())
                 .withSchema(schema)
+                //封装到动态表中
                 .createTemporaryTable("sensor");
 
         Table sensorTable = tableEnv.from("sensor");
+
         Table resultTable = sensorTable
                 .groupBy($("id"))
                 .select($("id"), $("id").count().as("cnt"));

@@ -31,24 +31,28 @@ public class Flink05_Window_Aggregate {
                 .keyBy(t -> t.f0)
                 .window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
                 .aggregate(new AggregateFunction<Tuple2<String, Long>, Long, Long>() {
+                    //初始化一个累加器
                     @Override
                     public Long createAccumulator() {
                         System.out.println("createAccumulator");
                         return 0L;
                     }
 
+                    //把传入的值于累加器进行累加
                     @Override
                     public Long add(Tuple2<String, Long> stringLongTuple2, Long aLong) {
                         System.out.println("add");
                         return aLong + stringLongTuple2.f1;
                     }
 
+                    //返回最终的结果
                     @Override
                     public Long getResult(Long aLong) {
                         System.out.println("getResult");
                         return aLong;
                     }
 
+                    //合并两个累加器，只会会话窗口会用，其他窗口不会用
                     @Override
                     public Long merge(Long aLong, Long acc1) {
                         System.out.println("merge");

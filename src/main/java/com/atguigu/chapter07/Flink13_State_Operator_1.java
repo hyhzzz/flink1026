@@ -48,6 +48,7 @@ public class Flink13_State_Operator_1 {
         }
 
         // Checkpoint时会调用这个方法，我们要实现具体的snapshot逻辑，比如将哪些本地状态持久化
+        //周期性的保存
         @Override
         public void snapshotState(FunctionSnapshotContext context) throws Exception {
             System.out.println("snapshotState...");

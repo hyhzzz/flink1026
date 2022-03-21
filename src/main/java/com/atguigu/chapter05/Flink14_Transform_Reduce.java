@@ -27,6 +27,7 @@ public class Flink14_Transform_Reduce {
         stream.keyBy(WaterSensor::getId)
                 .reduce(new ReduceFunction<WaterSensor>() {
                     @Override
+                    //WaterSensor value1, WaterSensor value2  value1：第一个是上次一次的聚合结果，value2：这一次参与聚合的数据
                     public WaterSensor reduce(WaterSensor value1, WaterSensor value2) throws Exception {
                         return new WaterSensor(value1.getId(), value1.getTs(), value1.getVc() + value2.getVc());
                     }

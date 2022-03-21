@@ -30,6 +30,7 @@ public class Flink14_State_Operator_2 {
                 .connect(broadcastStream)
                 .process(new BroadcastProcessFunction<String, String, String>() {
 
+                    //处理数据业务逻辑
                     @Override
                     public void processElement(String value, ReadOnlyContext ctx, Collector<String> out) throws Exception {
 
@@ -44,6 +45,7 @@ public class Flink14_State_Operator_2 {
                         }
                     }
 
+                    //处理广播数据，把收到的值，放入广播状态，处理逻辑中就可以拿到这个广播状态
                     @Override
                     public void processBroadcastElement(String value, Context ctx, Collector<String> out) throws Exception {
                         BroadcastState<String, String> state = ctx.getBroadcastState(stateDescriptor);

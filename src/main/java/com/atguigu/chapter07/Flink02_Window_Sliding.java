@@ -18,7 +18,6 @@ import java.util.Date;
  */
 public class Flink02_Window_Sliding {
     public static void main(String[] args) throws Exception {
-
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);

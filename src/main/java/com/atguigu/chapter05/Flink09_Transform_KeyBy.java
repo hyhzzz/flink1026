@@ -10,20 +10,19 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
  */
 public class Flink09_Transform_KeyBy {
     public static void main(String[] args) throws Exception {
-
         // 创建流执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);
 
-        DataStreamSource<Integer> stream = env.fromElements(1, 2, 3, 4, 5, 6);
+        DataStreamSource<Integer> stream = env.fromElements(1, 2, 3, 2, 4, 5, 6);
 
+        //<Integer, String> ：第一个输入的类型  第二个key的类型
         stream.keyBy(new KeySelector<Integer, String>() {
             @Override
             public String getKey(Integer value) throws Exception {
-                return value %2 == 0 ?"偶数":"奇数" ;
+                return value % 2 == 0 ? "偶数" : "奇数";
             }
         }).print();
-
 
         env.execute();
     }

@@ -14,7 +14,6 @@ import org.apache.flink.util.Collector;
  */
 public class Flink04_Window_Reduce {
     public static void main(String[] args) throws Exception {
-
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);

@@ -19,7 +19,6 @@ import static org.apache.flink.table.api.Expressions.$;
  */
 public class Flink03_Connector_File {
     public static void main(String[] args) throws Exception {
-
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
 
@@ -31,18 +30,23 @@ public class Flink03_Connector_File {
                 .field("ts", DataTypes.BIGINT())
                 .field("vc", DataTypes.INT());
 
-
         tableEnv.connect(new FileSystem().path("input/sensor.txt"))
                 .withFormat(new Csv().fieldDelimiter(',').lineDelimiter("\n"))
                 .withSchema(schema)
+                //创建一个动态表
                 .createTemporaryTable("sensor");
 
+        //得到table对象
         Table sensor = tableEnv.from("sensor");
+
+        //有table对象可以直接打印 仅仅只是用来做测试，不用转流输出了
+        //sensor.execute().print();
+
         Table resultTable = sensor.groupBy($("id"))
                 .select($("id"), $("id").count().as("cnt"));
 
         DataStream<Tuple2<Boolean, Row>> resultStream = tableEnv.toRetractStream(resultTable, Row.class);
-        resultStream.print();
+        resultStream.filter(r->r.f0).print();
 
         env.execute();
 

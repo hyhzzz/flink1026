@@ -19,6 +19,7 @@ public class StreamWordCount {
 
         //获取流执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setParallelism(1);
 
         //读取数据：无界流和有界流
         DataStreamSource<String> lineStream = env.readTextFile("input/words.txt");

@@ -7,10 +7,10 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
  * @author CoderHyh
  * @create 2022-03-20 18:46
  */
-public class Flink15_SQL_Group_Windows {
+public class Flink17_SQL_Over_Windows {
     public static void main(String[] args) {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        env.setParallelism(2);
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env);
 
         // 作为事件时间的字段必须是 timestamp 类型, 所以根据 long 类型的 ts 计算出来一个 t
@@ -28,12 +28,11 @@ public class Flink15_SQL_Group_Windows {
 
         tEnv
                 .sqlQuery(
-                        "SELECT id, " +
-                                "  TUMBLE_START(t, INTERVAL '1' minute) as wStart,  " +
-                                "  TUMBLE_END(t, INTERVAL '1' minute) as wEnd,  " +
-                                "  SUM(vc) sum_vc " +
-                                "FROM sensor " +
-                                "GROUP BY TUMBLE(t, INTERVAL '1' minute), id"
+                        "select " +
+                                "id," +
+                                "vc," +
+                                "sum(vc) over(partition by id order by t rows between 1 PRECEDING and current row)"
+                                + "from sensor"
                 )
                 .execute()
                 .print();

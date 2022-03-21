@@ -22,7 +22,7 @@ import java.time.Duration;
 public class Flink01_Project_Product_UV {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        env.setParallelism(2);
 
         WatermarkStrategy<UserBehavior> wms = WatermarkStrategy
                 .<UserBehavior>forBoundedOutOfOrderness(Duration.ofSeconds(5))
@@ -39,15 +39,7 @@ public class Flink01_Project_Product_UV {
                     String[] split = line.split(",");
                     return new UserBehavior(Long.valueOf(split[0]), Long.valueOf(split[1]), Integer.valueOf(split[2]), split[3], Long.valueOf(split[4]));
                 })
-                .assignTimestampsAndWatermarks(
-                        WatermarkStrategy.<UserBehavior>forBoundedOutOfOrderness(Duration.ofSeconds(3))
-                                .withTimestampAssigner(new SerializableTimestampAssigner<UserBehavior>() {
-                                    @Override
-                                    public long extractTimestamp(UserBehavior userBehavior, long l) {
-                                        return userBehavior.getTimestamp() * 1000;
-                                    }
-                                })
-                )
+                .assignTimestampsAndWatermarks(wms)
                 .filter(behavior -> "pv".equals(behavior.getBehavior())) //过滤出pv行为
                 .keyBy(UserBehavior::getBehavior)
                 .window(TumblingEventTimeWindows.of(Time.seconds(5)))

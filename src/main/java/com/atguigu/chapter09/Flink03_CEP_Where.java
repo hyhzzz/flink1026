@@ -24,7 +24,6 @@ public class Flink03_CEP_Where {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);
 
-
         SingleOutputStreamOperator<WaterSensor> waterSensorStream = env
                 .readTextFile("input/sensor.txt")
                 .map(new MapFunction<String, WaterSensor>() {

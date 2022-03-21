@@ -1,6 +1,5 @@
 package com.atguigu.chapter07;
 
-import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 /**
@@ -12,16 +11,25 @@ public class Flink18_State_Backend {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);
 
-        //env.setStateBackend(new MemoryStateBackend());
-        env.setStateBackend(new FsStateBackend(""));
-        //多久做一次Checkpoint 三秒做一次
-        env.enableCheckpointing(3000);
-        //设置超时时间
-        env.getCheckpointConfig().setCheckpointTimeout(60000);
-        //env.setStateBackend(new RocksDBStateBackend(""));
-
+        //env.setStateBackend(new FsStateBackend("")); //1.13之前的写法
         //env.setStateBackend(new HashMapStateBackend());//1.13版本写法
         //env.getCheckpointConfig().setCheckpointStorage("");//1.13版本写法
+
+        //env.setStateBackend(new MemoryStateBackend()); //1.13之前的写法
+        //env.setStateBackend(new HashMapStateBackend()); //1.13版本写法
+        //env.getCheckpointConfig().setCheckpointStorage(new JobManagerCheckpointStorage()); //1.13版本写法
+
+
+        //env.setStateBackend(new RocksDBStateBackend("")); //1.13之前的写法
+        //env.setStateBackend(new EmbeddedRocksDBStateBackend()); //1.13版本写法
+        //env.getCheckpointConfig().setCheckpointStorage("hdfs://checkpoints"); //1.13版本写法
+
+        //多久做一次Checkpoint 三秒做一次
+        env.enableCheckpointing(3000);
+
+        //设置超时时间
+        env.getCheckpointConfig().setCheckpointTimeout(60000);
+
 
         env.execute();
 

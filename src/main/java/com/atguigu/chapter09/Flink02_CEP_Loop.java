@@ -24,7 +24,6 @@ public class Flink02_CEP_Loop {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);
 
-
         SingleOutputStreamOperator<WaterSensor> waterSensorStream = env
                 .readTextFile("input/sensor.txt")
                 .map(new MapFunction<String, WaterSensor>() {
@@ -48,10 +47,11 @@ public class Flink02_CEP_Loop {
                         return "sensor_1".equalsIgnoreCase(value.getId());
                     }
                 })
-                //.times(2);
-                //.timesOrMore(2);
-                //.times(2,3)
-                .oneOrMore();
+                //.times(2); //表示前面这个模式出现两次才匹配  出现两次的放在一个集合
+                //.times(2,3);
+                //.oneOrMore();
+                .timesOrMore(2);
+
         //把模式运用在流上
         PatternStream<WaterSensor> waterSensorPatternStream = CEP.pattern(waterSensorStream, pattern);
 

@@ -22,8 +22,11 @@ public class Flink06_Transform_FlatMap {
             @Override
             //value:就是我们传进来的数据
             public void flatMap(Integer value, Collector<Integer> collector) throws Exception {
-                collector.collect(value * value);
-                collector.collect(value * value * value);
+                //collector.collect(value * value);
+                //collector.collect(value * value * value);
+                if (value % 2 == 0) {
+                    collector.collect(value);
+                }
             }
         }).print();
 

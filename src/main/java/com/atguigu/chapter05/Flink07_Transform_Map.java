@@ -28,9 +28,11 @@ public class Flink07_Transform_Map {
         //).print();
 
         stream.map(new RichMapFunction<Integer, Integer>() {
+            //执行的次数和并行度一样的，和算子的并行度一致
             @Override
             public void open(Configuration parameters) throws Exception {
                 System.out.println("open生命周期...");
+                //建立连接对象
             }
 
             @Override
@@ -41,10 +43,9 @@ public class Flink07_Transform_Map {
             @Override
             public void close() throws Exception {
                 System.out.println("close生命周期...");
+                //关闭资源
             }
         }).print();
-
-
 
         env.execute();
     }

@@ -16,7 +16,7 @@ public class Flink17_State_Keyed_MapState {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment
                 .getExecutionEnvironment()
-                .setParallelism(3);
+                .setParallelism(2);
         env
                 .socketTextStream("hadoop102", 9999)
                 .map(value -> {

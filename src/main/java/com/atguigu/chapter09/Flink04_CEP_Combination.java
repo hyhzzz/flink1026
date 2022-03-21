@@ -25,7 +25,6 @@ public class Flink04_CEP_Combination {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);
 
-
         SingleOutputStreamOperator<WaterSensor> waterSensorStream = env
                 .readTextFile("input/sensor.txt")
                 .map(new MapFunction<String, WaterSensor>() {
@@ -56,8 +55,8 @@ public class Flink04_CEP_Combination {
                 //        return "sensor_2".equals(value.getId());
                 //    }
                 //});
-
                 .followedBy("end")
+                //.followedByAny("end")
                 .where(new SimpleCondition<WaterSensor>() {
                     @Override
                     public boolean filter(WaterSensor value) throws Exception {

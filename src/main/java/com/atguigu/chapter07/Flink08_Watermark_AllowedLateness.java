@@ -18,7 +18,6 @@ import java.time.Duration;
  */
 public class Flink08_Watermark_AllowedLateness {
     public static void main(String[] args) throws Exception {
-
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);

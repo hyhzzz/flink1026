@@ -19,7 +19,7 @@ import static org.apache.flink.table.api.Expressions.$;
 public class Flink06_TableApi_ToKafka {
     public static void main(String[] args) {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        env.setParallelism(2);
 
         DataStreamSource<WaterSensor> waterSensorStream =
                 env.fromElements(new WaterSensor("sensor_1", 1000L, 10),

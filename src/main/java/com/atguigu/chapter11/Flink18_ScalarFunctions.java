@@ -11,11 +11,11 @@ import org.apache.flink.table.functions.ScalarFunction;
  * @author CoderHyh
  * @create 2022-03-20 20:35
  */
-public class Flink17_ScalarFunctions {
+public class Flink18_ScalarFunctions {
     public static void main(String[] args) {
         //1.获取执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        env.setParallelism(2);
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
 
         //2.读取文件得到DataStream

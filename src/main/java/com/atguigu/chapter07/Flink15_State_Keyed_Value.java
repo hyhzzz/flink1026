@@ -33,6 +33,7 @@ public class Flink15_State_Keyed_Value {
                     @Override
                     public void open(Configuration parameters) throws Exception {
 
+                        //getRuntimeContext：运行时对象
                         state = getRuntimeContext().getState(new ValueStateDescriptor<Integer>("state", Integer.class));
                     }
 

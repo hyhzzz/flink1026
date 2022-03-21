@@ -20,7 +20,6 @@ import java.time.Duration;
  */
 public class Flink10_Watermark_SideOutput_2 {
     public static void main(String[] args) throws Exception {
-
         //获取流的执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);

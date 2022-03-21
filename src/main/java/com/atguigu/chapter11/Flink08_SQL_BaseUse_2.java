@@ -14,7 +14,7 @@ import org.apache.flink.types.Row;
 public class Flink08_SQL_BaseUse_2 {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        env.setParallelism(2);
         StreamTableEnvironment tableEnv = StreamTableEnvironment.create(env);
 
         DataStreamSource<WaterSensor> waterSensorStream =
@@ -25,13 +25,13 @@ public class Flink08_SQL_BaseUse_2 {
                         new WaterSensor("sensor_1", 5000L, 50),
                         new WaterSensor("sensor_2", 6000L, 60));
 
-
         // 使用sql查询一个已注册的表
         // 1. 从流得到一个表
         Table table = tableEnv.fromDataStream(waterSensorStream);
 
         // 2. 把注册为一个临时视图
         tableEnv.createTemporaryView("sensor", table);
+
         //没办法拿到table对象
         //tableEnv.createTemporaryView("sensor",waterSensorStream);
 
